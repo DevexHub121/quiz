@@ -21,3 +21,8 @@ logs/
 # OS
 .DS_Store
 Thumbs.db
+inspect_bank.py
+inspect_db.py
+seed.py
+
+instance/
