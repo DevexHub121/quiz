@@ -1,0 +1,16 @@
+{
+  "name": "Secure Quiz Portal",
+  "short_name": "QuizPortal",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f1f5f9",
+  "theme_color": "#2563eb",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3407/3407024.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="result-card glass animate-fade-in">
+    <div class="success-icon">✓</div>
+    <h1>Quiz Submitted Successfully</h1>
+    <p class="subtitle">Thank you for participating.</p>
+</div>
+
+<style>
+.result-card {
+    text-align: center;
+    padding: 4rem 2rem;
+    max-width: 500px;
+    margin: 4rem auto;
+    border-radius: 20px;
+}
+.success-icon {
+    width: 80px;
+    height: 80px;
+    background: #4CAF50;
+    color: white;
+    font-size: 3rem;
+    line-height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+}
+h1 { color: #1e293b; margin-bottom: 1rem; }
+.subtitle { color: #64748b; font-size: 1.1rem; }
+</style>
+{% endblock %}
