@@ -10,6 +10,12 @@ env/
 data/*.db
 data/*.xlsx
 
+# Utility & Debug Scripts
+inspect_bank.py
+db_seed.py
+seed.py
+inspect/
+
 # Logs
 logs/
 *.log
@@ -21,8 +27,3 @@ logs/
 # OS
 .DS_Store
 Thumbs.db
-inspect_bank.py
-inspect_db.py
-seed.py
-
-instance/
