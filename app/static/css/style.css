@@ -21,6 +21,19 @@ body {
     display: flex;
     justify-content: center;
     align-items: center; 
+    overflow-x: hidden;
+}
+
+/* For pages with long content, allow vertical scrolling naturally */
+body:has(.quiz-container), body:has(.result-container) {
+    align-items: flex-start;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.no-scroll {
+    /* Remove strict overflow hidden to prevent cutting off content */
+    overflow-y: auto !important;
 }
 
 .app-container {
