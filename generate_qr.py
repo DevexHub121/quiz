@@ -16,7 +16,7 @@ def get_local_ip():
 
 def generate_exam_qr(token):
     local_ip = get_local_ip()
-    base_url = f"http://{local_ip}:5000"
+    base_url = f"http://{local_ip}:5001"
     
     # Create the link
     link = f"{base_url}/?exam_token={token}"

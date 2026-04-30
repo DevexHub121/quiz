@@ -1,6 +1,8 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<div class="quiz-wrapper-outer" style="width: 100%; display: flex; justify-content: center;">
+    <script>document.body.classList.add('quiz-container-active');</script>
 <div class="quiz-container">
     <div class="quiz-header glass">
         <div class="student-info">
@@ -17,7 +19,7 @@
             <h3>Q{{ i+1 }}: {{ q.question }}</h3>
             <div class="options">
                 <label class="option">
-                    <input type="radio" name="q_{{ i }}" value="1" required>
+                    <input type="radio" name="q_{{ i }}" value="1">
                     <span>{{ q.option1 }}</span>
                 </label>
                 <label class="option">
@@ -44,7 +46,7 @@
 
 <script>
     const startTime = new Date("{{ session.start_time.strftime('%Y-%m-%dT%H:%M:%S') }}Z");
-    const durationMinutes = 15; // Set to 15 minutes as requested
+    const durationMinutes = 20; // Set to 20 minutes as requested
     const endTime = new Date(startTime.getTime() + durationMinutes * 60000);
 
     function updateTimer() {
@@ -91,4 +93,6 @@
         margin-bottom: 0.5rem;
     }
 </style>
+</div>
+</div>
 {% endblock %}

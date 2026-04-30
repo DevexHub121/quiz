@@ -1,31 +1,156 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="result-card glass animate-fade-in">
-    <div class="success-icon">✓</div>
-    <h1>Quiz Submitted Successfully</h1>
-    <p class="subtitle">Thank you for participating.</p>
+<script>
+    document.body.classList.add('no-scroll');
+    document.body.classList.add('quiz-container-active');
+</script>
+<div class="result-container animate-fade-in">
+    <div class="result-card glass">
+        <div class="success-icon">✓</div>
+        <h1>Quiz Submitted!</h1>
+        <p class="subtitle">Your results have been recorded and synced.</p>
+        
+        <div class="score-summary">
+            <div class="total-score">
+                <span class="score-value">{{ score }}</span>
+                <span class="score-label">Total Score / {{ total }}</span>
+            </div>
+            
+            <div class="section-breakdown">
+                {% for section, s_score in section_scores.items() %}
+                <div class="section-item">
+                    <span class="section-name">{{ section }}</span>
+                    <span class="section-score">{{ s_score }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="result-footer">
+            <p>You may now close this window.</p>
+            <a href="{{ url_for('auth.index') }}" class="btn">Finish</a>
+        </div>
+    </div>
 </div>
 
 <style>
+.result-container {
+    padding: 1rem 0;
+    max-width: 900px; /* Increased for better desktop view */
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+}
+
 .result-card {
     text-align: center;
-    padding: 4rem 2rem;
-    max-width: 500px;
-    margin: 4rem auto;
-    border-radius: 20px;
+    padding: 2.5rem;
+    width: 100%;
 }
+
 .success-icon {
-    width: 80px;
-    height: 80px;
-    background: #4CAF50;
+    width: 65px;
+    height: 65px;
+    background: #10b981;
     color: white;
-    font-size: 3rem;
-    line-height: 80px;
+    font-size: 2.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 50%;
-    margin: 0 auto 1.5rem;
+    margin: 0 auto 1.25rem;
+    box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
 }
-h1 { color: #1e293b; margin-bottom: 1rem; }
-.subtitle { color: #64748b; font-size: 1.1rem; }
+
+h1 { color: #1e293b; margin-bottom: 0.25rem; font-size: 2rem; }
+.subtitle { color: #64748b; margin-bottom: 2.5rem; font-size: 1.1rem; }
+
+.score-summary {
+    background: #f8fafc;
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid #e2e8f0;
+}
+
+.total-score {
+    margin-bottom: 2.5rem;
+}
+
+.score-value {
+    display: block;
+    font-size: 4rem;
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1;
+}
+
+.score-label {
+    color: #64748b;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.section-breakdown {
+    display: grid;
+    gap: 15px;
+    grid-template-columns: 1fr; /* Default mobile */
+}
+
+/* Multi-column grid for section scores on desktop */
+@media (min-width: 640px) {
+    .section-breakdown {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.section-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    background: white;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.section-name {
+    font-weight: 600;
+    color: #475569;
+    font-size: 1rem;
+}
+
+.section-score {
+    background: var(--primary);
+    color: white;
+    padding: 4px 14px;
+    border-radius: 99px;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.result-footer {
+    margin-top: 2rem;
+}
+
+.result-footer p {
+    color: #94a3b8;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 480px) {
+    .score-value { font-size: 3rem; }
+    .result-card { padding: 1.5rem; }
+    .score-summary { padding: 1.5rem; }
+}
+
 </style>
 {% endblock %}

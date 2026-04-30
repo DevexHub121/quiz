@@ -6,23 +6,74 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>Secure Quiz Portal</title>
+    <title>Devexhub Exam Portal</title>
+    <link rel="icon" type="image/png" href="https://devexhub.com/assets/images/favicon/favicon.png">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
 </head>
 <body>
     <div class="app-container">
+        <div class="logo-container">
+            <img src="https://devexhub.com/assets/images/logo/1672721570_devex_logo-1.png" alt="Devex Hub Logo" class="company-logo">
+        </div>
+
         {% with messages = get_flashed_messages() %}
           {% if messages %}
-            {% for message in messages %}
-              <div class="alert">{{ message }}</div>
-            {% endfor %}
+            <div id="alert-modal" class="modal-overlay">
+                <div class="modal-card animate-pop">
+                    <div class="modal-icon">!</div>
+                    <div class="modal-content">
+                        {% for message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                    <button class="btn" onclick="closeModal()">OK</button>
+                </div>
+            </div>
+            <script>
+                function closeModal() {
+                    document.getElementById('alert-modal').classList.add('hidden');
+                }
+            </script>
           {% endif %}
         {% endwith %}
         
         {% block content %}{% endblock %}
     </div>
+
+    <script>
+        function showLoading(btn) {
+            if (btn && !btn.classList.contains('btn-loading')) {
+                btn.classList.add('btn-loading');
+                btn.disabled = true;
+                const originalText = btn.innerHTML;
+                btn.setAttribute('data-original-text', originalText);
+                btn.innerHTML = '<span class="spinner-sm"></span> Processing...';
+            }
+        }
+
+        // Global form submit handler
+        document.addEventListener('submit', function(e) {
+            // Find the button that triggered the submit
+            const submitBtn = e.submitter || e.target.querySelector('button[type="submit"], input[type="submit"]');
+            if (submitBtn) {
+                showLoading(submitBtn);
+            }
+        });
+
+        // Ensure buttons are re-enabled if user goes back in history
+        window.addEventListener('pageshow', function(event) {
+            const btns = document.querySelectorAll('.btn-loading');
+            btns.forEach(btn => {
+                btn.classList.remove('btn-loading');
+                btn.disabled = false;
+                if (btn.hasAttribute('data-original-text')) {
+                    btn.innerHTML = btn.getAttribute('data-original-text');
+                }
+            });
+        });
+    </script>
     
     <script src="{{ url_for('static', filename='js/anti-cheat.js') }}"></script>
 </body>

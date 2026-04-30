@@ -1,14 +1,14 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="auth-card glass">
-    <h1>Welcome to the Examination</h1>
+<div class="auth-card no-card">
+    <h1>Welcome to Devexhub Exam Portal</h1>
     <p>Please enter your details to start.</p>
     
     <form action="{{ url_for('auth.validate') }}" method="POST">
         <div class="form-group">
             <label>Full Name</label>
-            <input type="text" name="name" required minlength="3" placeholder="John Doe">
+            <input type="text" name="name" required minlength="3" pattern="[A-Za-z\s]+" title="Name should only contain letters and spaces" placeholder="John Doe">
         </div>
         <div class="form-group">
             <label>Email Address</label>
@@ -16,33 +16,15 @@
         </div>
         <div class="form-group">
             <label>Phone Number</label>
-            <input type="text" name="phone" required pattern="[0-9]{10,12}" title="Please enter a valid phone number (10-12 digits)" placeholder="9876543210">
+            <div class="phone-input-group">
+                <span class="country-code">+91</span>
+                <input type="text" name="phone" required pattern="[0-9]{10}" maxlength="10" title="Please enter a valid 10-digit phone number" placeholder="9876543210" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+            </div>
         </div>
-        <div class="form-group">
-            <label>Exam Token</label>
-            <input type="text" name="token" value="{{ prefilled_token or 'QUIZ-2026-TEST' }}" readonly style="background-color: #f1f5f9; cursor: not-allowed; color: #64748b; font-weight: 600;">
-            <small style="color: var(--text-muted); font-size: 0.8rem;">Token is automatically applied via your entry link.</small>
-        </div>
+        <input type="hidden" name="token" value="{{ prefilled_token or 'QUIZ-2026-TEST' }}">
         <button type="submit" class="btn-primary">Start Exam</button>
     </form>
 </div>
 
-<script>
-    document.querySelectorAll('input:not([readonly])').forEach(input => {
-        input.addEventListener('blur', function() {
-            if (!this.checkValidity()) {
-                this.classList.add('is-invalid');
-                this.reportValidity();
-            } else {
-                this.classList.remove('is-invalid');
-            }
-        });
-        
-        input.addEventListener('input', function() {
-            if (this.checkValidity()) {
-                this.classList.remove('is-invalid');
-            }
-        });
-    });
-</script>
+
 {% endblock %}

@@ -1,73 +1,57 @@
-// Anti-Cheat System (Proctored Mode)
-console.log("Proctored mode initialized");
+// Anti-Cheat Logic
+document.addEventListener('DOMContentLoaded', function() {
+    const isQuizPage = document.querySelector('.quiz-container') !== null;
+    if (!isQuizPage) return;
 
-// 1. Tab Switching & Window Blur Detection
-document.addEventListener('visibilitychange', function() {
-    if (document.hidden) {
-        logViolation('tab_switch', 'User switched tab or minimized window');
+    let violations = 0;
+    const maxViolations = 3;
+
+    function handleViolation(type) {
+        violations++;
+        console.warn(`Violation detected: ${type}. Count: ${violations}`);
+        
+        // Show overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'violation-overlay';
+        overlay.innerHTML = `
+            <h2>⚠️ Security Warning</h2>
+            <p>Tab switching or window blurring is not allowed during the exam.</p>
+            <p>Violation ${violations}/${maxViolations}</p>
+            <button class="btn" style="width: auto; padding: 10px 30px;" onclick="this.parentElement.remove()">I Understand</button>
+        `;
+        document.body.appendChild(overlay);
+
+        // Optionally notify server
+        fetch('/log_violation', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type: type, details: `Violation ${violations}` })
+        });
+
+        if (violations >= maxViolations) {
+            alert("Maximum violations reached. Your exam may be disqualified.");
+        }
     }
+
+    // Visibility Change
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            handleViolation('tab_switch');
+        }
+    });
+
+    // Window Blur
+    window.addEventListener('blur', function() {
+        handleViolation('window_blur');
+    });
+
+    // Prevent Context Menu (Right Click)
+    document.addEventListener('contextmenu', e => e.preventDefault());
+
+    // Prevent Keyboard Shortcuts (F12, Ctrl+Shift+I, etc.)
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) e.preventDefault();
+        if (e.key === 'F12') e.preventDefault();
+        if (e.ctrlKey && e.key === 'u') e.preventDefault();
+    });
 });
-
-window.onblur = function() {
-    logViolation('window_blur', 'User clicked outside the browser window');
-};
-
-// 2. Prevent Accidental Close / Reload
-let isSubmitting = false;
-
-window.onbeforeunload = function() {
-    if (!isSubmitting) {
-        return "Are you sure you want to exit the exam? Your progress may be lost.";
-    }
-};
-
-// Disable the popup when the quiz form is submitted
-document.addEventListener('submit', function() {
-    isSubmitting = true;
-});
-
-// 3. Disable Copy/Paste/Right-Click
-document.addEventListener('contextmenu', e => e.preventDefault());
-document.addEventListener('copy', e => e.preventDefault());
-document.addEventListener('paste', e => e.preventDefault());
-
-// 4. Fullscreen Enforcement
-function enterFullscreen() {
-    const elem = document.documentElement;
-    if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-    } else if (elem.webkitRequestFullscreen) {
-        elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) {
-        elem.msRequestFullscreen();
-    }
-}
-
-// Track fullscreen exit
-document.addEventListener('fullscreenchange', () => {
-    if (!document.fullscreenElement) {
-        logViolation('fullscreen_exit', 'User exited fullscreen mode');
-    }
-});
-
-// 5. Log Violation to Server (Silent)
-function logViolation(type, details) {
-    console.warn(`Violation detected: ${type} - ${details}`);
-    
-    fetch('/log_violation', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ type, details })
-    })
-    .catch(err => console.error('Error logging violation:', err));
-}
-
-// Auto-trigger fullscreen on start
-if (window.location.pathname === '/start') {
-    document.addEventListener('click', function initFullscreen() {
-        enterFullscreen();
-        document.removeEventListener('click', initFullscreen);
-    }, { once: true });
-}
