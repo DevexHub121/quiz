@@ -303,3 +303,5 @@ label { display: block; margin-bottom: 0.5rem; color: #475569; font-size: 0.9rem
     .company-logo { max-width: 120px; }
     h1 { font-size: 1.4rem; }
 }
+.hidden { display: none !important; }
+.modal-card .btn { cursor: pointer; }

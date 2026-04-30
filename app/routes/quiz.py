@@ -89,7 +89,9 @@ def submit():
     }
     save_record(record)
     
-    return render_template('result.html', score=total_score, total=len(questions), section_scores=section_scores)
+    answered_count = sum(1 for i in range(len(questions)) if answers.get(f'q_{i}'))
+    
+    return render_template('result.html', answered=answered_count, total=len(questions))
 
 @quiz_bp.route('/log_violation', methods=['POST'])
 def log_violation():
